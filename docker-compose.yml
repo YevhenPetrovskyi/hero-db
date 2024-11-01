@@ -1,0 +1,20 @@
+version: '3.5'
+
+services:
+  postgres:
+    image: postgres:14.3-alpine
+    restart: unless-stopped
+    container_name: postgres
+    # command: postgres -c config_file=/etc/postgresql.conf
+    ports:
+      - ${DB_FORWARD_PORT:-5432}:5432
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./.docker/postgres/data:/var/lib/postgresql/data
+      - ./.docker/postgres/postgresql.conf:/etc/postgresql.conf
+      - ./.docker/postgres/initdb.d:/docker-entrypoint-initdb.d
+    shm_size: 256m
