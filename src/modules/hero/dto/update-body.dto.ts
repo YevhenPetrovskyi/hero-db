@@ -62,7 +62,7 @@ export class UpdateHeroBodyDto {
       return value.split(',').map((id) => parseInt(id));
     }
 
-    return value;
+    return value.map((id) => parseInt(id));
   })
   deletedPictureIds?: number[];
 }

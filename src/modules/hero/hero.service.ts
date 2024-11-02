@@ -118,19 +118,21 @@ export class HeroService {
       where: { hero_id: id },
     });
 
-    const picruresForDelete = heroPictures.filter(({ id }) =>
-      deletedPictureIds.includes(id),
-    );
+    if (deletedPictureIds) {
+      const picturesForDelete = heroPictures.filter(({ id }) =>
+        deletedPictureIds.includes(id),
+      );
 
-    await Promise.all(
-      picruresForDelete.map((picture) =>
-        this.s3Service.deleteFile(`${this.folder}/${picture.name}`),
-      ),
-    );
+      await Promise.all(
+        picturesForDelete.map((picture) =>
+          this.s3Service.deleteFile(`${this.folder}/${picture.name}`),
+        ),
+      );
 
-    await this.pictureRepository.delete({
-      id: In(updateBody.deletedPictureIds),
-    });
+      await this.pictureRepository.delete({
+        id: In(updateBody.deletedPictureIds),
+      });
+    }
 
     const s3PicturesPromises = [];
     const heroPicturesArray = [];
